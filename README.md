@@ -13,4 +13,6 @@ Future things im gonna put on it:
 
 - Discord Integration
 
+- Documentation in the files for easier understanding
+
 (Open to ideas)
