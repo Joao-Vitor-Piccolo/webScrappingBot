@@ -1,37 +1,40 @@
-import bot_do_Chat as bC
+from bot_do_Chat import Bot
 import datetime as dt
 from time import sleep
 from json import JSONDecodeError
+import api_data as ap
 
-id_sala = 'MaiHL6MycT'
+room_id = 'MaiHL6MycT'
 
 if __name__ == '__main__':
-    intervalo = dt.timedelta(minutes=15)
+    bot = Bot(cookies=ap.cookies, headers=ap.headers, params=ap.params)
+    gap = dt.timedelta(minutes=15)
+
     try:
-        bC.setar_tempo_limite(intervalo)
+        bot.set_timelimit(bot=bot, gap=gap)
     except KeyError:
-        bC.entrar_na_sala(id_sala)
+        bot.join_room(room_id)
         sleep(1)
-        bC.setar_tempo_limite(intervalo)
+        bot.set_timelimit(bot=bot, gap=gap)
 
     while True:
         sleep(2)
         try:
-            if bC.ver_status():
+            if bot.see_status():
                 try:
-                    tempo_limite = bC.setar_tempo_limite(intervalo)
-                    print(f'tempo limite: {tempo_limite}')
-                    if int(tempo_limite.replace(":", "")) <= int(dt.datetime.now().strftime("%H:%M").replace(":", "")):
-                        print(f'o tempo limite foi batido: {tempo_limite}')
-                        bC.mandar_mensagem_otaku()
+                    time_limit = bot.set_timelimit(bot=bot, gap=gap)
+                    print(f'time_limit: {time_limit}')
+                    if int(time_limit.replace(":", "")) <= int(dt.datetime.now().strftime("%H:%M").replace(":", "")):
+                        print(f'the time is over the limit: {time_limit}')
+                        bot.send_weeb_quote()
                         sleep(1)
-                        tempo_limite = bC.setar_tempo_limite(intervalo)
-                        print(f'Novo tempo limite: {tempo_limite}')
+                        time_limit = bot.set_timelimit(bot=bot, gap=gap)
+                        print(f'New Time Limit: {time_limit}')
                 except KeyError:
-                    bC.entrar_na_sala(id_sala)
+                    bot.join_room(room_id)
                 except JSONDecodeError:
-                    print("A resposta não contém um JSON válido.")
+                    print("The response isn't a valid JSON")
             else:
-                bC.entrar_na_sala(id_sala)
+                bot.join_room(room_id)
         except JSONDecodeError:
-            print("A resposta não contém um JSON válido.")
+            print("The response isn't a valid JSON")
