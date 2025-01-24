@@ -15,6 +15,4 @@ Future things im gonna put on it:
 
 - Documentation in the files for easier understanding
 
-- OOP structure
-
 (Open to ideas)
